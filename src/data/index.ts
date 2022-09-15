@@ -5,7 +5,12 @@ const spicyFoods = [
 
 let nextId = 3;
 
-const newSpicyFoods = [
+const newSpicyFoods: {
+  id?: number;
+  name: string;
+  cuisine: string;
+  heatLevel: number;
+}[] = [
   { name: "Green Curry", cuisine: "Thai", heatLevel: 9 },
   { name: "Enchiladas", cuisine: "Mexican", heatLevel: 2 },
   { name: "5 Alarm Chili", cuisine: "American", heatLevel: 5 },
