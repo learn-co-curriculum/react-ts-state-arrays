@@ -208,7 +208,7 @@ const newFoodArray = [...foods, newFood];
 Here, we're using the spread operator (`...`) to make a _copy_ of our `foods`
 array, and insert each element into a _new_ array. We're also adding the newly
 generated food returned by the `getNewRandomSpicyFood` function, which we saved
-to the `newFood` variable at the end of the array.
+to the `newFood` variable, at the end of the array.
 
 Remember, whenever we are updating state, it's important that we always pass a
 new object/array to `setState`. That's why we're using the spread operator here
