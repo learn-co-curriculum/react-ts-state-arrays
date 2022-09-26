@@ -13,13 +13,15 @@
 In this lesson, we'll discuss how to work with arrays in state. Working with
 arrays and objects in state requires special care because of one simple rule:
 
-**React will only update state if a new object/array is passed to setState.**
+**React will only update an object/array state if a new object/array is passed
+to setState.**
 
 In this lesson, we'll learn some common patterns for creating new arrays when we
 need to add elements to an array in state, remove elements from arrays in state,
 and update individual items in arrays in state.
 
-Fork and clone this lesson so you can code along!
+Fork and clone this lesson so you can code along! Be sure to run
+`npm install && npm start` to get started.
 
 ## Understand Why We Can't Mutate State
 
@@ -50,14 +52,14 @@ In an earlier lesson, we learned that when the button is clicked in this example
 component, the following occurs:
 
 1. Calling `setCount(1)` tells React that its internal state for our `Counter`
-   component's `count` value must update to 1
+   component's `count` value must update to `1`
 2. React updates its internal state
 3. React **re-renders** the `Counter` component based on changes to internal
    state
 4. When the `Counter` component is re-rendered, `useState` will return the
-   current value of React's internal state, which is now 1
-5. The value of `count` is now 1 within our `Counter` component
-6. Our component's JSX uses this new value to display the number 1 within the
+   current value of React's internal state, which is now `1`
+5. The value of `count` is now `1` within our `Counter` component
+6. Our component's JSX uses this new value to display the number `1` within the
    button
 
 In step 3 above, one key detail is that React re-renders components based on
@@ -154,7 +156,7 @@ out a component that does the following:
 - Shows a button to generate a new spicy food
 - When the button is clicked, adds the newly generated food to a list
 
-The starter code for this component is in `SpicyFoodList.js`. Before we walk
+The starter code for this component is in `SpicyFoodList.tsx`. Before we walk
 through the solution, see if you can get this working by **adding a new spicy
 food to the array when the button is clicked**.
 
@@ -205,8 +207,8 @@ const newFoodArray = [...foods, newFood];
 
 Here, we're using the spread operator (`...`) to make a _copy_ of our `foods`
 array, and insert each element into a _new_ array. We're also adding the newly
-generated food returned by the `getNewRandomSpicyFood` function at the end of the
-array.
+generated food returned by the `getNewRandomSpicyFood` function, which we saved
+to the `newFood` variable, at the end of the array.
 
 Remember, whenever we are updating state, it's important that we always pass a
 new object/array to `setState`. That's why we're using the spread operator here
@@ -221,6 +223,12 @@ and passing a reference to the original array.
 After setting state, our component should automatically re-render with the new
 list of foods.
 
+> **Note**: You may have noticed if you hover over any of the food variables,
+> such as `newFood` in the `handleAddFood` function, it appears to have a type
+> of `Food`. This is not a default type in TS or React, of course. This is a
+> type interface provided in the starter data given in `data/index.ts`. Check it
+> out if you're interested to see how the type is shaped.
+
 ### Removing Elements From Arrays In State
 
 Let's add another feature. When a user clicks on a food, that food should be
@@ -231,11 +239,19 @@ id of the food we're trying to remove:
 
 ```jsx
 const foodList = foods.map((food) => (
-  <li key={food.id} onClick={() => handleLiClick(food.id)}>
+  <li key={food.id} onClick={() => handleLiClick(food.id!)}>
     {food.name} | Heat: {food.heatLevel} | Cuisine: {food.cuisine}
   </li>
 ));
 ```
+
+> One quick aside on some TypeScript syntax here - notice how the argument we're
+> passing to our handler has the `!` at the end of it?:
+> `handleLiClick(food.id!)` If you'll recall, that `!` tells TypeScript that we,
+> as the developers, know the value will not be undefined. If you wanted to be
+> even more safe, you could instead handle `undefined` cases in the
+> `handleLiClick` function, but for our purposes we are sure that `food.id` will
+> not be undefined when it reaches this point.
 
 Next, in the `handleLiClick` function, we need to figure out a way to update our
 array in state so it no longer includes the food.
@@ -265,7 +281,7 @@ One common approach to this problem of creating a new array that doesn't include
 a specific element is using the `.filter` method. Here's how we can do it:
 
 ```jsx
-function handleLiClick(id) {
+function handleLiClick(id: number) {
   const newFoodArray = foods.filter((food) => food.id !== id);
   setFoods(newFoodArray);
 }
@@ -340,7 +356,7 @@ So to use that technique to solve our problem, here's how our click event
 handler would look:
 
 ```js
-function handleLiClick(id) {
+function handleLiClick(id: number) {
   const newFoodArray = foods.map((food) => {
     if (food.id === id) {
       return {
@@ -428,7 +444,7 @@ With this state variable in place, we can update the `<select>` element to set
 the `filterBy` variable when its value is changed, like so:
 
 ```jsx
-function handleFilterChange(event) {
+function handleFilterChange(event: React.ChangeEvent<HTMLSelectElement>) {
   setFilterBy(event.target.value);
 }
 
@@ -478,7 +494,7 @@ generating the `<li>` elements:
 
 ```jsx
 const foodList = foodsToDisplay.map((food) => (
-  <li key={food.id} onClick={() => handleLiClick(food.id)}>
+  <li key={food.id} onClick={() => handleLiClick(food.id!)}>
     {food.name} | Heat: {food.heatLevel} | Cuisine: {food.cuisine}
   </li>
 ));
